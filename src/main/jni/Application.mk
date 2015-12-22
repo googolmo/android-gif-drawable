@@ -1,4 +1,4 @@
-APP_ABI := all
+APP_ABI := armeabi
 APP_PLATFORM := android-21
 APP_OPTIM := release
 
