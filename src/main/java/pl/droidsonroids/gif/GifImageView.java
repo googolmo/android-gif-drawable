@@ -104,9 +104,32 @@ public class GifImageView extends ImageView {
     }
 
     @Override
+    public void setImageDrawable(Drawable drawable) {
+        recycle();
+        super.setImageDrawable(drawable);
+    }
+
+    @Override
     public void setBackgroundResource(int resId) {
+        recycle();
         if (!GifViewUtils.setResource(this, false, resId)) {
             super.setBackgroundResource(resId);
+        }
+    }
+
+    /**
+     * recycle GifDrawable memory
+     */
+    public void recycle() {
+        Drawable oldDrawable = getDrawable();
+        if (oldDrawable != null && oldDrawable instanceof GifDrawable) {
+            GifDrawable gifDrawable = (GifDrawable) oldDrawable;
+            if (gifDrawable.isPlaying()) {
+                gifDrawable.stop();
+            }
+            if (!gifDrawable.isRecycled()) {
+                gifDrawable.recycle();
+            }
         }
     }
 
@@ -133,5 +156,11 @@ public class GifImageView extends ImageView {
      */
     public void setFreezesAnimation(boolean freezesAnimation) {
         mFreezesAnimation = freezesAnimation;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        recycle();
+        super.finalize();
     }
 }
