@@ -16,6 +16,7 @@
 package pl.droidsonroids.gif;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
@@ -121,6 +122,7 @@ class ReLinker {
     }
 
     @SuppressWarnings("deprecation") //required for old API levels
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static ZipEntry getLibraryEntry(final String libName, final ZipFile zipFile) {
         String jniNameInApk;
 
