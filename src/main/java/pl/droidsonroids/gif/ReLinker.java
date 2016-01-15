@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.Closeable;
 import java.io.File;
@@ -116,7 +117,9 @@ class ReLinker {
                 break;
             }
         } finally {
-            closeSilently(zipFile);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                closeSilently(zipFile);
+            }
         }
         return outputFile;
     }
@@ -139,6 +142,10 @@ class ReLinker {
         } else {
             jniNameInApk = "lib/" + Build.CPU_ABI + "/" + libName;
             libraryEntry = zipFile.getEntry(jniNameInApk);
+            if (libraryEntry == null) {
+                jniNameInApk = "lib/" + Build.CPU_ABI2 + "/" + libName;
+                libraryEntry = zipFile.getEntry(jniNameInApk);
+            }
         }
 
         if (libraryEntry == null) {
